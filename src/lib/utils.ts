@@ -1,8 +1,11 @@
-import type { BinaryLike, SessionOptions } from './types';
+import type { BinaryLike, EncoderOptions, EncryptionOptions, SessionOptions } from './types';
 import type { RequestEvent } from '@sveltejs/kit';
 import type { MaybePromise } from '@sveltejs/kit';
 
-export function expiresToMaxage(expires: number, expires_in: 'days' | 'hours' | 'minutes' | 'seconds') {
+export function expiresToMaxAge(
+	expires: number,
+	expires_in: 'days' | 'hours' | 'minutes' | 'seconds'
+) {
 	switch (expires_in) {
 		case 'days':
 			return expires * 24 * 60 * 60;
@@ -26,26 +29,18 @@ export interface Secret {
 	secret: BinaryLike;
 }
 
-export interface NormalizedConfig {
-	init: (event: RequestEvent) => MaybePromise<any>;
-	saveUninitialized: boolean;
-	key: string;
-	expires: number;
-	expires_in: 'days' | 'hours' | 'minutes' | 'seconds';
-	chunked: boolean;
-	cookie: {
+export type NormalizedConfig = Omit<Required<SessionOptions>, 'cookie' | 'rolling' | 'secret'> & {
+	cookie: Required<SessionOptions>['cookie'] & {
 		maxAge: number;
-		httpOnly: boolean;
-		sameSite: any;
-		path: string;
-		domain: string | undefined;
-		secure: boolean;
 	};
 	rolling: number | boolean | undefined;
 	secrets: Array<Secret>;
-}
+};
 
-export function normalizeConfig(options: SessionOptions, isSecure: boolean = false): NormalizedConfig {
+export function normalizeConfig(
+	options: SessionOptions,
+	isSecure: boolean = false
+): NormalizedConfig {
 	if (options.secret == null) {
 		throw new Error('Please provide at least one secret');
 	}
@@ -59,7 +54,7 @@ export function normalizeConfig(options: SessionOptions, isSecure: boolean = fal
 		expires: options.expires ? options.expires : 7,
 		expires_in: options.expires_in ? options.expires_in : 'days',
 		cookie: {
-			maxAge: expiresToMaxage(options.expires || 7, options.expires_in || 'days'),
+			maxAge: expiresToMaxAge(options.expires || 7, options.expires_in || 'days'),
 			httpOnly: options?.cookie?.httpOnly ?? true,
 			sameSite: options?.cookie?.sameSite || 'lax',
 			path: options?.cookie?.path || '/',
@@ -68,6 +63,7 @@ export function normalizeConfig(options: SessionOptions, isSecure: boolean = fal
 		},
 		chunked: options?.chunked ?? false,
 		rolling: options?.rolling ?? false,
-		secrets: Array.isArray(options.secret) ? options.secret : [{ id: 1, secret: options.secret }]
+		secrets: Array.isArray(options.secret) ? options.secret : [{ id: 1, secret: options.secret }],
+		encoder: options?.encoder ?? JSON
 	};
 }

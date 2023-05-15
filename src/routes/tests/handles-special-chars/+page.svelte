@@ -5,4 +5,3 @@
 
 <span id="name">{data.name}</span>
 <span id="session_name">{data.session.name}</span>
-

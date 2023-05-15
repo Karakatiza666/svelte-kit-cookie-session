@@ -5,6 +5,6 @@ export const GET: RequestHandler = async ({ locals }) => {
 
 	return json({
 		data: locals.session.data as {},
-		expires: locals.session.expires,
+		expires: locals.session.expires
 	});
 };

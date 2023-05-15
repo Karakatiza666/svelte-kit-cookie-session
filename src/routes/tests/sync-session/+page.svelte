@@ -7,7 +7,7 @@
 		const response = await fetch('/tests/sync-session', {
 			method: 'POST',
 			headers: { Accept: 'application/json' },
-			body: new FormData(),
+			body: new FormData()
 		});
 		if (response.headers.has('x-svelte-kit-cookie-session-needs-sync')) {
 			await invalidateAll();

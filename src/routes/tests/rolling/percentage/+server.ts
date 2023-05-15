@@ -22,7 +22,6 @@ export const GET: RequestHandler = async (event) => {
 	});
 	await newSession.init();
 
-
 	if (new Date(newSession.expires!).getTime() === new Date(session.expires!).getTime()) {
 		return json({ ok: false });
 	}

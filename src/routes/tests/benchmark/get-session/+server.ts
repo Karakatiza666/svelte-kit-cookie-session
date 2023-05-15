@@ -6,7 +6,7 @@ import { Benchmark } from '../_benchmark';
 export const POST: RequestHandler = async (event) => {
 	const { runs = 1000 } = await event.request.json();
 
-	const initialSession = new CookieSession(event, { secret: SECRET })
+	const initialSession = new CookieSession(event, { secret: SECRET });
 	await initialSession.init();
 
 	await initialSession.set(initialData);

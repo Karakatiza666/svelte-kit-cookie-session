@@ -31,7 +31,7 @@ The seal stored on the client contains the session data, not your server, making
 #### Version 3.x to 4.x
 
 The internal encryption library changed to the [@noble/ciphers](https://github.com/paulmillr/noble-ciphers) which is up to 35% faster than the previous implementation. The encryption should also now be even more secure.
-Because of the change of the encryption library we have an major version bump. You now have to provide a secret with an exact length of 32 characters or bytes. You can use [Password Generator](https://1password.com/password-generator/) to generate strong secrets. 
+Because of the change of the encryption library we have an major version bump. You now have to provide a secret with an exact length of 32 characters or bytes. You can use [Password Generator](https://1password.com/password-generator/) to generate strong secrets.
 
 ## Installation
 
@@ -294,7 +294,7 @@ You can configure the expiry date of the session cookie via the `expires` option
 ```js
 handleSession({
 	expires: 160, // 160 minutes
-	expires_in: 'minutes', // minutes | hours | days | seconds
+	expires_in: 'minutes' // minutes | hours | days | seconds
 });
 ```
 
@@ -305,6 +305,6 @@ You can save unsaved sessions with the initial data via the `saveUninitialized` 
 ```js
 handleSession({
 	init: () => ({ views: 0 }),
-	saveUninitialized: true,
+	saveUninitialized: true
 });
 ```

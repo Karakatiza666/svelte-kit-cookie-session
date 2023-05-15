@@ -8,15 +8,18 @@
 	},
 	"exports": {
 		"./package.json": "./package.json",
-		"./core": "./core.js",
-		"./handle": "./handle.js",
-		".": "./index.js",
-		"./types": "./types.js",
-		"./utils": "./utils.js"
+		"./core": "./dist/core.js",
+		"./handle": "./dist/handle.js",
+		".": "./dist/index.js",
+		"./types": "./dist/types.js",
+		"./utils": "./dist/utils.js"
 	},
+	"files": [ "./dist" ],
+	"types": "./dist/index",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
+		"prepare": "svelte-package",
 		"package": "rimraf ./.svelte-kit/types && svelte-package && cp package.json dist/package.json && cp LICENSE dist/LICENSE && cp README.md dist/README.md",
 		"preview": "vite preview",
 		"test": "playwright test",

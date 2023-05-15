@@ -1,6 +1,32 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import type { MaybePromise } from '@sveltejs/kit';
 
+/**
+ * How session data is converted to bytes
+ * By default, uses JSON.parse and JSON.stringify
+ */
+export type EncoderOptions =
+	| {
+			/**
+			 * How to read session data from string encoding
+			 */
+			parse: (input: string) => any;
+			/**
+			 * How to write session data to string encoding
+			 */
+			stringify: (value: any) => string;
+	  }
+	| {
+			/**
+			 * How to read session data directly from binary representation
+			 */
+			deserialize: (input: Uint8Array) => any;
+			/**
+			 * How to write session data directly to binary representation
+			 */
+			serialize: (value: any) => Uint8Array;
+	  };
+
 export interface SessionOptions {
 	/**
 	 * An optional function that is called when no stored session exists, this would be the initial session state.
@@ -35,7 +61,7 @@ export interface SessionOptions {
 
 	/**
 	 * expires in Minutes
-	*/
+	 */
 	expires_in?: 'days' | 'hours' | 'minutes' | 'seconds';
 
 	/**
@@ -100,6 +126,7 @@ export interface SessionOptions {
 		 */
 		secure?: boolean | undefined;
 	};
+	encoder?: EncoderOptions;
 }
 
 export interface Session<SessionType = Record<string, any>> {

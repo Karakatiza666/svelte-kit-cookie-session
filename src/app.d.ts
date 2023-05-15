@@ -10,7 +10,7 @@ declare namespace App {
 	}
 
 	// interface Platform {}
-	
+
 	interface Session extends SessionData {}
 
 	interface PageData {

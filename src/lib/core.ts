@@ -2,7 +2,7 @@ import type { Cookies, RequestEvent } from '@sveltejs/kit';
 import { encrypt, decrypt, getKey, generateNonce } from './crypto.js';
 import type { SessionOptions } from './types';
 import {
-	expiresToMaxage,
+	expiresToMaxAge,
 	maxAgeToDateOfExpiry,
 	normalizeConfig,
 	type NormalizedConfig
@@ -156,7 +156,10 @@ export class CookieSession<SessionType = Record<string, any>> {
 
 		this.#state.needsSync = true;
 
-		const newMaxAge = expiresToMaxage(expires ? expires : this.#config.expires, this.#config.expires_in);
+		const newMaxAge = expiresToMaxAge(
+			expires ? expires : this.#config.expires,
+			this.#config.expires_in
+		);
 
 		this.#sessionData = {
 			...this.#sessionData,
@@ -188,7 +191,7 @@ export class CookieSession<SessionType = Record<string, any>> {
 		const key = getKey(this.#config.secrets[0].secret as string);
 
 		const encode = () => {
-			return encrypt(key, nonce, this.#sessionData);
+			return encrypt(key, nonce, this.#sessionData, this.#config.encoder);
 		};
 
 		const id = String(this.#config.secrets[0].id);
@@ -286,7 +289,7 @@ export class CookieSession<SessionType = Record<string, any>> {
 		// Try to decode with the given sessionCookie and secret
 		try {
 			const key = getKey(secret.secret);
-			const decrypted = await decrypt(key, sessionCookie);
+			const decrypted = await decrypt(key, sessionCookie, this.#config.encoder);
 
 			if (
 				decrypted &&
